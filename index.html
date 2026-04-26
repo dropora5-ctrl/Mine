@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>For You ððÂ</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: black;
+    color: white;
+    overflow: hidden;
+}
+
+/* ===== INTRO (STAR ZOOM) ===== */
+#intro {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: 9999;
+}
+#introCanvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* ===== TRAILER TEXT ===== */
+#trailer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9998;
+    background: black;
+    opacity: 0;
+    transition: 1s;
+}
+.trailer-text {
+    font-size: 2em;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: 1s;
+
+}
+
+/* ===== MAIN PAGE ===== */
+.container {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+/* Buttons */
+button {
+    margin: 10px;
+    padding: 12px 25px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    transition: 0.3s;
+}
+
+.yes {
+    background: linear-gradient(45deg, #00ff99, #00cc66);
+    box-shadow: 0 0 15px #00ff99;
+    position: relative;
+    z-index: 10000;
+
+}
+.yes:hover {
+    transform: scale(1.1);
+}
+
+.no {
+    background: linear-gradient(45deg, #ff4d6d, #ff1a40);
+    position: absolute;
+}
+.yes { background: #00ff99; }
+.no { background: #ff4d6d; position: absolute; }
+
+/* Final */
+#final {
+    opacity: 0;
+    transition: 1s;
+}
+
+/* Hearts */
+.heart {
+    position: absolute;
+    bottom: -10px;
+    color: pink;
+    animation: floatUp linear forwards;
+}
+@keyframes floatUp {
+    to { 
+        transform: translateY(-100vh) rotate(360deg); 
+        opacity: 0; 
+    }
+
+
+}
+  h1 {
+    font-size: 2.5em;
+    text-shadow: 0 0 15px #ff4d6d, 0 0 30px #ff4d6d;
+}
+
+#typing {
+    font-size: 1.4em;
+    line-height: 1.6;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+  body {
+    font-family: 'Poppins', sans-serif;
+  .yes {
+    position: relative;
+    z-index: 1000;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+    <canvas id="introCanvas"></canvas>
+</div>
+
+<!-- TRAILER -->
+<div id="trailer">
+    <div class="trailer-text" id="tText"></div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+    <h1>Oiii Minnuððâ¤ï¸</h1>
+    <div id="typing"></div>
+
+    <div id="final">
+        I love you soo muchhððÂ¸Â<br><br>
+        Will you stay with me forever?<br><br>
+        <button class="yes" id="yesBtn">Yes ð</button>
+        <button class="no" id="noBtn">Noð­ð­</button>
+    </div>
+</div>
+
+<audio id="music" loop>
+    <source src="your-song.mp3">
+</audio>
+
+<script>
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+  const yesBtn = document.getElementById("yesBtn");
+
+yesBtn.addEventListener("click", function () {
+    console.log("YES CLICKED"); // test
+
+    yesClick();
+});
+  function createBurst(symbol){
+    const el = document.createElement("div");
+    el.innerHTML = symbol;
+
+    el.style.position = "fixed";
+    el.style.left = "50%";
+    el.style.top = "50%";
+    el.style.fontSize = (Math.random()*20 + 20) + "px";
+    el.style.zIndex = "9999";
+
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * 300 + 100;
+
+    const x = Math.cos(angle) * distance;
+    const y = Math.sin(angle) * distance;
+
+    el.style.transition = "1s ease-out";
+
+    document.body.appendChild(el);
+
+    setTimeout(() => {
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random()*360}deg)`;
+        el.style.opacity = "0";
+    }, 10);
+
+    setTimeout(() => el.remove(), 1000);
+  }
+
+/* ===== STAR ZOOM INTRO ===== */
+const canvas = document.getElementById("introCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stars = Array.from({length:300},()=>({
+    x:Math.random()*canvas.width-canvas.width/2,
+    y:Math.random()*canvas.height-canvas.height/2,
+    z:Math.random()*canvas.width
+}));
+
+function drawStars(){
+    ctx.fillStyle="black";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="white";
+
+    stars.forEach(s=>{
+        s.z-=5;
+        if(s.z<=0) s.z=canvas.width;
+
+        let k=128/s.z;
+        let x=s.x*k+canvas.width/2;
+        let y=s.y*k+canvas.height/2;
+
+        let size=(1-s.z/canvas.width)*3;
+        ctx.fillRect(x,y,size,size);
+    });
+
+    requestAnimationFrame(drawStars);
+}
+drawStars();
+
+/* ===== TRAILER TEXT ===== */
+const trailerLines = [
+    "In a world full of random moments...",
+    "Something unexpected happened...",
+    "I met you.",
+    "And somehow...",
+    "Everything changed.",
+    "You become my world",
+    "LOVE YOU VAVEEâ¤ï¸â¤ï¸ðð"
+    
+];
+
+let tIndex = 0;
+
+function showTrailer() {
+    const trailer = document.getElementById("trailer");
+    const text = document.getElementById("tText");
+
+    trailer.style.opacity = 1;
+
+    function nextLine() {
+        if (tIndex >= trailerLines.length) {
+            trailer.style.opacity = 0;
+            setTimeout(startMain, 1000);
+            return;
+        }
+
+        text.innerHTML = trailerLines[tIndex];
+        text.style.opacity = 1;
+
+        setTimeout(() => {
+            text.style.opacity = 0;
+            tIndex++;
+            setTimeout(nextLine, 800);
+        }, 2000);
+    }
+
+    nextLine();
+}
+
+/* ===== FLOW CONTROL ===== */
+setTimeout(() => {
+    document.getElementById("intro").style.display = "none";
+    showTrailer();
+}, 3500);
+
+/* ===== MAIN PAGE ===== */
+const text = "You make my days brighter, my smile real, and my life better. I dont say it enoughððð but I really love you.";
+let i = 0;
+
+    function typeEffect(){
+    if(i < text.length){
+        document.getElementById("typing").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeEffect, Math.random()*60 + 20);
+    
+    
+    }
+}
+
+function startMain(){
+    document.getElementById("music").play();
+    typeEffect();
+    setTimeout(()=>{
+        document.getElementById("final").style.opacity=1;
+    },4000);
+}
+
+/* YES */
+    function yesClick(){
+
+    // BIG MESSAGE
+    const msg = document.createElement("div");
+    msg.innerHTML = "I LOVE YOU FOREVER â¤ï¸ð¥¹";
+    msg.style.position = "fixed";
+    msg.style.top = "50%";
+    msg.style.left = "50%";
+    msg.style.transform = "translate(-50%, -50%) scale(0)";
+    msg.style.fontSize = "2.5em";
+    msg.style.color = "#ff4d6d";
+    msg.style.textAlign = "center";
+    msg.style.textShadow = "0 0 20px #ff4d6d";
+    msg.style.transition = "0.6s";
+    msg.style.zIndex = "9999";
+
+    document.body.appendChild(msg);
+
+    // Animate message
+    setTimeout(() => {
+        msg.style.transform = "translate(-50%, -50%) scale(1)";
+    }, 100);
+
+
+    // ð HEART EXPLOSION
+    for(let i=0; i<30; i++){
+        createBurst("â¤ï¸");
+    }
+
+    // ð CONFETTI
+    for(let i=0; i<40; i++){
+        createBurst("ð");
+    }
+    
+}
+
+/* NO RUN AWAY */
+const noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseover",()=>{
+    noBtn.style.left=Math.random()*80+"%";
+    noBtn.style.top=Math.random()*80+"%";
+});
+
+/* HEARTS */
+function createHeart(){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="â¤ï¸ð«ðâ¤ï¸âð©¹ð";
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDuration=(Math.random()*3+4)+"s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+}
+</script>
+
+</body>
+</html>
